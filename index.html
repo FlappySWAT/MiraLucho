@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Canvas Sprite Tests</title>
+		<style>
+			@font-face {
+				font-family: "8BitWonder";
+				src: url("FONTS/8BitWonder.eot");
+				src: local("?"),
+				url("FONTS/8BitWonder.woff") format("woff"),
+				url("FONTS/8BitWonder.ttf") format("truetype"),
+				url("FONTS/8BitWonder.svg#webfontkGgbkDbi") format("svg");
+			}
+			@font-face {
+				font-family: "Gamegirl";
+				src: url("FONTS/Gamegirl.eot");
+				src: local("?"),
+				url("FONTS/Gamegirl.woff") format("woff"),
+				url("FONTS/Gamegirl.ttf") format("truetype"),
+				url("FONTS/Gamegirl.svg#webfontkGgbkDbi") format("svg");
+			}
+			@font-face {
+				font-family: "PressStart";
+				src: url("FONTS/PressStart2P.eot");
+				src: local("?"),
+				url("FONTS/PressStart2P.woff") format("woff"),
+				url("FONTS/PressStart2P.ttf") format("truetype"),
+				url("FONTS/PressStart2P.svg#webfontkGgbkDbi") format("svg");
+			}
+		</style>
+		<script type="text/javascript" src="JS/fznPlatform.js"></script>
+		<script type="text/javascript" src="JS/fznMenus.js"></script>
+		<script type="text/javascript" src="JS/fznBackgrounds.js"></script>
+		<script type="text/javascript" src="JS/fznAnimations.js"></script>
+		<script>
+			var game;
+			function loadGame(){
+				game = new fzn.Game("board");
+				game.define("background",[
+					{
+						name:"empty"
+					}
+				]);
+				game.define("overlay",[
+					{
+						name:"empty",
+						fixed: true
+					}
+				]);
+				game.define("button",[
+					{
+						name: "btnClose",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[0,0],
+							press:[0,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "#991324",
+							align: "center",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.stop();
+								game.ram.count--;
+								game.score += menu.value;
+								menu.anim.start("fadeOut",false,function(){
+									game.removeWindow(menu);
+								});
+							}
+						}
+					},{
+						name: "empty",
+						size: [86,20],
+						pos: "center",
+						action: function(game,menu){
+						}
+					}
+				]);
+				game.define("window",[
+					{
+						name: "commonWindow",
+						animation:"fadeIn",
+						value: 10,
+						size:[200,100],
+						color:"black",
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: "Close"
+								}
+							}
+						]
+					},{
+						name: "alterWindow",
+						animation:"fadeIn",
+						value: 20,
+						size:[200,100],
+						color:"red",
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: "Close"
+								}
+							}
+						]
+					},{
+						name: "alterWindow2",
+						animation:"fadeIn",
+						value: 30,
+						size:[200,100],
+						color:"blue",
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: "Close"
+								}
+							}
+						]
+					
+					}
+				]);
+				game.define("menu",[
+					{
+						name: "BSOD",
+						color:"blue",
+						buttons: [
+							{
+								copyOf: "empty",
+								params:{
+									color: "white",
+									font:{
+										family: "Gamegirl",
+										color: "blue",
+										size: "9px"
+									},
+									pos:["center",(game.cnv.height/2)-80],
+									text: "Crashed",
+									action: function(game,menu){
+										var mMenu;
+										game.reset();
+										mMenu = game.add("menu","mainMenu");
+										mMenu.anim.callback = function(){
+											game.remove("menu",menu.id);
+										}
+									}
+								}
+							},
+							{
+								copyOf: "empty",
+								params:{
+									size:[250,22],
+									pos:["center",(game.cnv.height/2)+65],
+									font:{
+										family: "Gamegirl",
+										color: "white",
+										size: "8px"
+									},
+									text: "Press this button to continue_",
+									action: function(game,menu){
+										game.reset();
+										game.gameOver = false;
+										menu.anim.start("fadeOut",false,function(){
+											game.remove("menu",menu.id)
+										})
+									}
+								}
+							}
+						],
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "8px"
+						},
+						text:[
+							"A problem has been detected and the game has been shut down",
+							"to prevent damage.",
+							"",
+							"If this is the first time you've seen this stop error screen,",
+							"restart your game. If this screen appears again, try beating",
+							"the following score:",
+							""
+						]
+					},
+					{
+						name: "mainMenu",
+						animation:"fadeIn",
+						color:"grey",
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: "Start",
+									pos:[(game.cnv.width/2)-110,game.cnv.height-100],
+									action: function(game,menu){
+										game.reset();
+										game.gameOver = false;
+										menu.anim.start("fadeOut",false,function(){
+											game.remove("menu",menu.id);
+										})
+									}
+								}
+							},
+							{
+								copyOf: "btnClose",
+								params:{
+									text: "Settings",
+									pos:[(game.cnv.width/2)+10,game.cnv.height-100],
+									action: function(game,menu){
+										//Settings Actions
+									}
+								}
+							}
+						]
+					}
+				]);
+				//game.reset();
+				game.add("menu","mainMenu");
+			}
+		</script>
+	</head>
+	<body onload="loadGame();">
+		<canvas id="board" width="600" height="300"></canvas>
+	</body>
+</html>
