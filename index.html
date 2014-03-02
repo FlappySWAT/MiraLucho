@@ -27,6 +27,13 @@
 				url("FONTS/PressStart2P.ttf") format("truetype"),
 				url("FONTS/PressStart2P.svg#webfontkGgbkDbi") format("svg");
 			}
+			html,body{
+				margin:0px;
+				padding:0px;
+				width:100%;
+				height:100%;
+				overflow:hidden;
+			}
 		</style>
 		<script type="text/javascript" src="JS/fznPlatform.js"></script>
 		<script type="text/javascript" src="JS/fznLoaders.js"></script>
@@ -154,7 +161,7 @@
 									action: function(game,menu){
 										var mMenu;
 										game.reset();
-										mMenu = game.add("menu","mainMenu");
+										mMenu = game.add("menu","xMainMenu");
 										mMenu.anim.callback = function(){
 											game.remove("menu",menu.id);
 										}
@@ -198,7 +205,7 @@
 						]
 					},
 					{
-						name: "mainMenu",
+						name: "xMainMenu",
 						animation:"fadeIn",
 						color:"grey",
 						buttons: [
@@ -222,19 +229,81 @@
 									text: "Settings",
 									pos:[(game.cnv.width/2)+10,game.cnv.height-100],
 									action: function(game,menu){
-										//Settings Actions
+										game.add("menu","settingsMenu");
 									}
 								}
 							}
 						]
+					},
+					{
+						name: "setMenuSkin",
+						color:"#994400",
+						size: [game.cnv.width-40,100],
+						pos: [20,50],
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "10px"
+						},
+						text:[
+							"Skin"
+						],
+						textPos: [20,30]
+					},
+					{
+						name: "setMenuLang",
+						color:"#994400",
+						size: [game.cnv.width-40,50],
+						pos: [20,170],
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "10px"
+						},
+						text:[
+							"Language"
+						],
+						textPos: [20,30]
+					},
+					{
+						name: "settingsMenu",
+						animation:"bounce",
+						color:"#993300",
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: "OK",
+									pos:[game.cnv.width-110,game.cnv.height-40],
+									action: function(game,menu){
+										menu.anim.start("fallOut",false,function(){
+											game.remove("menu",menu.id);
+										})
+									}
+								}
+							}
+						],
+						menus: [
+							{copyOf: "setMenuSkin"},
+							{copyOf: "setMenuLang"}
+						],
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "16px"
+						},
+						text:[
+							"Settings"
+						],
+						textPos: [20,36]
 					}
 				]);
-				//game.reset();
-				game.add("menu","mainMenu");
+				game.load();
+				game.add("menu","xMainMenu");
 			}
 		</script>
 	</head>
 	<body onload="loadGame();">
-		<canvas id="board" width="600" height="300"></canvas>
+		<canvas id="board" width="100%" height="100%"></canvas>
 	</body>
 </html>

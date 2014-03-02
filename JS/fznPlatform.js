@@ -8,6 +8,7 @@ window.requestAnimFrame = (function(callback) {
 })();
 fzn.Game = function(canvasID){
 	this.cnv = (typeof canvasID == "string") ? document.getElementById(canvasID) : canvasID;
+	this.resize();
 	this.canvas = (typeof this.cnv.getContext != "undefined" ) ? this.cnv.getContext('2d'): false;
 	this.loadQueue = 0;
 	this.start = true;
@@ -51,10 +52,12 @@ fzn.Game = function(canvasID){
 };
 fzn.Game.prototype = {
 	init: function(){
+		var self = this;
 		if(!this.canvas){
 			console.log("Canvas not supported or error loading")
 			return false;
 		}
+		window.onresize = function(){self.resize();};
 		this.canvas.fillStyle = this.font.color;
 		this.canvas.font = this.font.size + " '" + this.font.family + "', sans-serif";
 		this.canvas.textAlign = this.font.align;
@@ -204,20 +207,29 @@ fzn.Game.prototype = {
 	},
 	onClick: function(pos){
 		var catched = false,
-			key,len,window;
-		for(window in this.menus){
-			if(this.menus[window].click){
-				catched = this.menus[window].checkClicked(pos);
+			menus = [],
+			key,len,window,menu;
+		for(menu in this.menus){
+			if(this.menus[menu].click){
+				menus.push(this.menus[menu]);
 			}
 		}
-		for(len = this.windows.length; len > 0; len--){
-			if(catched){
-				this.bringToTop(window);
+		for(len = menus.length; len > 0; len--){
+			menu = menus[len-1];
+			if(menu.click){
+				catched = menu.checkClicked(pos);
 				break;
 			}
+		}
+		
+		for(len = this.windows.length; len > 0; len--){
 			window = this.windows[len-1];
 			if(window.click){
 				catched = window.checkClicked(pos);
+			}
+			if(catched){
+				this.bringToTop(window);
+				break;
 			}
 		}
 	},
@@ -328,6 +340,11 @@ fzn.Game.prototype = {
 				delete target[id];
 			}
 		}
+	},
+	resize: function(){
+		this.cnv.width = document.body.clientWidth;
+		this.cnv.height = document.body.clientHeight;
+		console.log("resize")
 	}
 }
 fzn.Catalog = function(game,type){

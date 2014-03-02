@@ -99,10 +99,14 @@ fzn.Animation.prototype = {
 			pos[0] = (this.item.game.cnv.width / 2) - (this.item.size[0] / 2);
 			pos[1] = (this.item.game.cnv.height / 2) - (this.item.size[1] / 2);
 		}else{
-			w = (typeof parent.size != "undefined") ? parent.size[0] : parent.cnv.width;
-			h = (typeof parent.size != "undefined") ? parent.size[1] : parent.cnv.height;
-			pos[0] = (pos[0] == "center") ? (w / 2) - (this.item.size[0] / 2) : pos[0];
-			pos[1] = (pos[1] == "center") ? (h / 2) - (this.item.size[1] / 2) : pos[1];
+			if(pos[0] == "center"){
+				w = (typeof parent.size != "undefined") ? parent.size[0] : parent.cnv.width;
+				pos[0] = (w / 2) - (this.item.size[0] / 2)
+			}
+			if(pos[0] == "center"){
+				h = (typeof parent.size != "undefined") ? parent.size[1] : parent.cnv.height;
+				pos[1] = (h / 2) - (this.item.size[1] / 2);
+			}
 		}
 		return pos;
 	},
