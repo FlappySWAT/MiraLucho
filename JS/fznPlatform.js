@@ -19,6 +19,7 @@ fzn.Game = function(canvasID){
 	this.score = 0;
 	this.level = 0;
 	this.gameOver = true;
+	this.wait = 30;
 	this.increment = 1.1;
 	this.font = {
 		family: "Gamegirl",
@@ -41,6 +42,11 @@ fzn.Game = function(canvasID){
 		padding: 10
 	};
 	this.speed = 60;
+	this.loader = new fzn.Loader(this,{
+		color: "black",
+		size:[this.cnv.width,10],
+		pos: [0,"center"]
+	});
 	this.init();
 };
 fzn.Game.prototype = {
@@ -53,7 +59,39 @@ fzn.Game.prototype = {
 		this.canvas.font = this.font.size + " '" + this.font.family + "', sans-serif";
 		this.canvas.textAlign = this.font.align;
 		this.catchClick();
-		this.go();
+	},
+	load: function(){
+		var img,self=this;
+		this.loader.total = this.loadQueue;
+		this.loading();
+		for(img in this.images){
+			this.images[img] = new Image()
+			this.images[img].addEventListener("load", function() {
+				self.loadQueue--;
+			}, false);
+			this.images[img].src = img;
+		}
+	},
+	loading: function(){
+		var self = this;
+		if(this.loadQueue != 0){
+			this.loader.go();
+			window.requestAnimFrame(function() {
+			  self.loading();
+			});
+		}else{
+			if(this.wait > 0){
+				this.loader.go();
+				window.requestAnimFrame(function() {
+				  self.loading();
+				});
+				this.wait--;
+			}else{
+				window.requestAnimFrame(function() {
+				  self.go();
+				});
+			}
+		}
 	},
 	go: function(){
 		var self = this,
@@ -61,22 +99,20 @@ fzn.Game.prototype = {
 		if(!this.start){
 			return false;
 		}
-		if(this.loadQueue == 0){
-			this.clear();
-			this.turn = (this.turn < 2520) ? this.turn + 1 : 0;
-			
-			if((this.turn % this.speed) == 0 && !this.gameOver){
-				this.loadWindow("commonWindow");
-			}
-			this.draw("window");
-			this.draw("overlay");
-			if(!this.gameOver){
-				this.updateRam();
-				this.updateLevelMeter();
-				this.updateScore();
-			}
-			this.draw("menu");
+		this.clear();
+		this.turn = (this.turn < 2520) ? this.turn + 1 : 0;
+		
+		if((this.turn % this.speed) == 0 && !this.gameOver){
+			this.loadWindow("commonWindow");
 		}
+		this.draw("window");
+		this.draw("overlay");
+		if(!this.gameOver){
+			this.updateRam();
+			this.updateLevelMeter();
+			this.updateScore();
+		}
+		this.draw("menu");
 		window.requestAnimFrame(function() {
           self.go();
         });
@@ -155,12 +191,8 @@ fzn.Game.prototype = {
 			self = this,
 			image = this.images[src];
 		if(src && typeof image == "undefined"){
-			this.images[src] = new Image()
-			this.images[src].addEventListener("load", function() {
-				self.loadQueue--;
-			}, false);
+			this.images[src] = null;
 			this.loadQueue++;
-			this.images[src].src = src;
 		}
 	},
 	catchClick: function(){
