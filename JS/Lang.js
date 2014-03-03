@@ -14,6 +14,7 @@ var gameLang={
 				lang:{
 					title:"Language",
 					EN: "English",
+					ES: "Spanish",
 					DEBUG: "Debug"
 				},
 				button: "OK"
@@ -56,6 +57,64 @@ var gameLang={
 			}
 		}
 	},
+	ES:{
+		menus:{
+			main:{
+				title:"Menu de Inicio",
+				start: "Comenzar",
+				settings: "Opciones"
+			},
+			settings:{
+				title:"Opciones",
+				skin:{
+					title:"Selecciona un Tema"
+				},
+				lang:{
+					title:"Idiomas",
+					EN: "Ingles",
+					ES: "Español",
+					DEBUG: "Debug"
+				},
+				button: "Aceptar"
+			},
+			BSoD:{
+				title: "Error",
+				message:[
+					"Se ha detectado un problema y su juego se ha cerrado para",
+					"prevenir futuros daños.",
+					"",
+					"Si esta es la primera vez que llega a esta pantalla, reinicie",
+					"el juego. Si la pantalla aparece de nuevo, intente venciendo",
+					"la siguiente puntuacion:",
+					"",
+					"* Su puntiacion actual es: ",
+					" puntos",
+					"* El nivel alcanzado es: "
+				],
+				button:"Presione aqui para continuar_"
+			}
+		},
+		game:{
+			status:{
+				score: "Puntos:",
+				level: "Nivel:"
+			},
+			windows:{
+				common1:{
+					title: "Esta es una prueba",
+					button: "Cerrar"
+				},
+				common2:{
+					title: "Esta es otra prueba",
+					button: "Cerrar"
+				},
+				common3:{
+					title: "Esta es una tercera prueba",
+					button: "Cerrar"
+				}
+			}
+		}
+	},
 	DEBUG:{
 		menus:{
 			main:{
@@ -71,6 +130,7 @@ var gameLang={
 				lang:{
 					title:"XXXXX",
 					EN: "XXXXX",
+					ES: "XXXXX",
 					DEBUG: "XXXXX"
 				},
 				button: "XXXXX"

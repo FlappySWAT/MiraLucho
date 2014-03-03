@@ -321,6 +321,17 @@
 								params:{
 									pos:[240,10],
 									fixed: false,
+									text: gameLang[game.lang].menus.settings.lang.ES,
+									action: function(game,menu){
+										game.lang = "ES";
+									}
+								}
+							},
+							{
+								copyOf: "btnClose",
+								params:{
+									pos:[360,10],
+									fixed: false,
 									text: gameLang[game.lang].menus.settings.lang.DEBUG,
 									action: function(game,menu){
 										game.lang = "DEBUG";
