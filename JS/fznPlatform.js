@@ -13,6 +13,7 @@ fzn.Game = function(canvasID){
 	this.loadQueue = 0;
 	this.start = true;
 	this.images = {};
+	this.audios = {};
 	this.libs = {};
 	this.windows = [];
 	this.windowVariation = 1;
@@ -42,7 +43,7 @@ fzn.Game = function(canvasID){
 		size: 0,
 		padding: 10
 	};
-	this.speed = 60;
+	this.speed = 1;
 	this.loader = new fzn.Loader(this,{
 		color: "black",
 		size:[this.cnv.width,10],
@@ -64,7 +65,7 @@ fzn.Game.prototype = {
 		this.catchClick();
 	},
 	load: function(){
-		var img,self=this;
+		var img,snd,self=this;
 		this.loader.total = this.loadQueue;
 		this.loading();
 		for(img in this.images){
@@ -73,6 +74,13 @@ fzn.Game.prototype = {
 				self.loadQueue--;
 			}, false);
 			this.images[img].src = img;
+		}
+		for(snd in this.audios){
+			this.audios[snd] = new Audio();
+			this.audios[snd].addEventListener("loadeddata", function() {
+				self.loadQueue--;
+			}, false);
+			this.audios[snd].src = snd;
 		}
 	},
 	loading: function(){
@@ -90,6 +98,7 @@ fzn.Game.prototype = {
 				});
 				this.wait--;
 			}else{
+				self.onLoad(self);
 				window.requestAnimFrame(function() {
 				  self.go();
 				});
@@ -162,13 +171,18 @@ fzn.Game.prototype = {
 		if(params instanceof Array){
 			for(i=0,len=params.length;i<len;i++){
 				this.libs[target].store(params[i]);
-				if(typeof params[i].source === "string"){
+				if((type == "sound" || type == "music") && typeof params[i].source === "string"){
+					this.loadSound(params[i].source);
+				}else if(typeof params[i].source === "string"){
 					this.loadImage(params[i].source);
 				}
+				
 			}
 		}else{
 			this.libs[target].store(params);
-			if(typeof params.source === "string"){
+			if((type == "sound" || type == "music") && typeof params.source === "string"){
+				this.loadSound(params.source);
+			}else if(typeof params.source === "string"){
 				this.loadImage(params.source);
 			}
 		}
@@ -195,6 +209,15 @@ fzn.Game.prototype = {
 			image = this.images[src];
 		if(src && typeof image == "undefined"){
 			this.images[src] = null;
+			this.loadQueue++;
+		}
+	},
+	loadSound: function(source){
+		var src = source || false,
+			self = this,
+			sound = this.audios[src];
+		if(src && typeof sound == "undefined"){
+			this.audios[src] = null;
 			this.loadQueue++;
 		}
 	},
@@ -232,6 +255,9 @@ fzn.Game.prototype = {
 				break;
 			}
 		}
+	},
+	onLoad: function(){
+		
 	},
 	bringToTop: function(window){
 		this.removeWindow(window);
@@ -286,7 +312,7 @@ fzn.Game.prototype = {
 	reset:function(){
 		this.level = 0;
 		this.score = 0;
-		this.speed = 60;
+		this.speed = 75;
 		this.ram = { 
 			count: 0,
 			limit: 13,
@@ -411,6 +437,10 @@ fzn.Catalog.prototype = {
 			break;
 			case "menu":
 				return new fzn.Menu(this.game,p);
+			break;
+			case "sound":
+				p.audio = game.audios[p.source];
+				return p;
 			break;
 			default:
 				return p;
