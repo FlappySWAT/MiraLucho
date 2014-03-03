@@ -19,7 +19,8 @@ fzn.Menu = function (game,params){
 			buttons: params.buttons || [],
 			ovelays: params.overlays || [],
 			menus: params.menus || [],
-			text: params.text || []
+			text: params.text || [],
+			sounds: params.sound || []
 		};
 		this.variableText = [];
 		this.font = {family:"Arial",color:"black",size:"6px",align:"left"};
@@ -71,6 +72,7 @@ fzn.Menu.prototype = {
 		// Generate a canvas for BG
 		this.game.loadImage(this.source);
 		this.loadItems();
+		this.playSound();
 	},
 	go: function(){
 		this.anim.go();
@@ -86,11 +88,16 @@ fzn.Menu.prototype = {
 		for(lib in this.game.libs){
 			theLib = this.items[lib+"s"] || false;
 			if(theLib){
-				for(i=0,len=theLib.length;i<len;i++){
-					item = theLib[i];
-					item.params = item.params || {};
-					item.params.menu = this;
-					this.add(lib,item.copyOf,item.id,item.params);
+				if(lib != "sound"){
+					for(i=0,len=theLib.length;i<len;i++){
+						item = theLib[i];
+						item.params = item.params || {};
+						item.params.menu = this;
+						this.add(lib,item.copyOf,item.id,item.params);
+					}
+				}else{
+					item = theLib;
+					this.add(lib,item);
 				}
 			}
 		}
@@ -175,6 +182,14 @@ fzn.Menu.prototype = {
 			this.game.canvas.restore();
 		}
 	},
+	playSound:function(){
+		var s;
+		for(s in this.sounds){
+			if(this.sounds[s].audio instanceof Audio){
+				this.sounds[s].audio.play();
+			}
+		}
+	},
 	checkClicked: function(pos){
 		var insidePos = [], item;
 		if(pos[0] > this.pos[0] && pos[0] < this.pos[0]+this.size[0] && pos[1] > this.pos[1] && pos[1] < this.pos[1]+this.size[1]){
@@ -250,8 +265,10 @@ fzn.Button = function (menu,params){
 	this.action = params.action || function(){}; 
 	this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
 	this.source = params.source || false;
+	this.sound = params.sound || false;
 	this.color = params.color || "transparent";
 	this.font = {family:"Arial",color:"black",size:"6px",align:"center"};
+	this.sound = params.sound || [];
 	if(typeof params.font != "undefined"){
 		this.font.family = params.font.family || this.font.family;
 		this.font.color = params.font.color || this.font.color;
@@ -283,6 +300,9 @@ fzn.Button.prototype = {
 		this.anim = new fzn.Animation(this,this.animation);
 		// Generate a canvas for BG
 		this.game.loadImage(this.source);
+		if(this.sound){
+			this.sound = game.libs.sound.generate(this.sound);
+		}
 	},
 	go: function(){
 		this.anim.go();
@@ -355,7 +375,10 @@ fzn.Button.prototype = {
 	},
 	checkClicked: function(pos){
 		if(pos[0] > this.pos[0] && pos[0] < this.pos[0]+this.size[0] && pos[1] > this.pos[1] && pos[1] < this.pos[1] + this.size[1]){
-			this.state = "press"
+			this.state = "press";
+			if(this.sound){
+				this.sound.audio.play();
+			}
 			this.action(this.game,this.menu);
 			return true;
 		}
