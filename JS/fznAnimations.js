@@ -5,10 +5,13 @@ fzn.Animation = function (item,anim,params){
 	params = params || {};
 	this.item = item;
 	this.game = item.game;
-	this.size = params.size || this.item.size || [50,50];
-	this.endPosition = item.pos || [0,0];
-	this.endSize = item.size || [0,0];
-	this.pos = params.apos || [0,0];
+	this.size = (typeof params.size != "undefined") ? [params.size[0],params.size[1]] : 
+				(typeof this.item.size == "undefined") ? [this.item.size[0],this.item.size[1]] : [50,50];
+	this.endPosition =  (typeof this.item.pos == "undefined") ? [0,0] : 
+						(typeof this.item.pos == "string") ? this.item.pos : [this.item.pos[0],this.item.pos[1]];
+	this.endSize =  (typeof this.item.size == "undefined") ? [0,0] : [this.item.size[0],this.item.size[1]];
+	this.pos =  (typeof params.apos == "undefined") ? [0,0] : 
+				(typeof params.apos == "string") ? params.apos : [params.apos[0],params.apos[1]];
 	this.velDown = params.velDown || 0;
 	this.gravity = params.gravity || 1;
 	this.maxVel = params.maxVel || 11;
@@ -38,24 +41,25 @@ fzn.Animation.prototype = {
 		}
 		this.callback = (typeof callback == "function") ? callback : this.callback;
 		this.endOpacity = (typeof this.endOpacity != "undefined") ? this.endOpacity : 1;
-		this.endSize = this.item.size || [10,10];
-		this.endPosition = this.item.pos || [0,0];
+		this.endPosition =  (typeof this.item.pos == "undefined") ? [0,0] : 
+							(typeof this.item.pos == "string") ? this.item.pos : [this.item.pos[0],this.item.pos[1]];
+		this.endSize =  (typeof this.item.size == "undefined") ? [10,10] : [this.item.size[0],this.item.size[1]];
 		switch(this.anim){
 			case "bounce":
 				temp = (typeof parent.pos != "undefined") ? parent.pos[1] : 0;
-				this.pos = [this.endPosition[0],temp-this.size[1]];
-				this.item.pos = this.pos;
+				this.pos = [this.endPosition[0],temp-this.item.size[1]];
+				this.item.pos = [this.pos[0],this.pos[1]];
 			break;
 			case "fallIn":
 				this.pos = [this.endPosition[0],this.endPosition[1]-this.size[1]];
 				this.anim = "fall";
-				this.item.pos = this.pos;
+				this.item.pos = [this.pos[0],this.pos[1]];
 			break;
 			case "fallOut":
 				this.endPosition = [this.item.pos[0], this.item.pos[1] + this.item.game.cnv.height];
 				this.pos = [this.item.pos[0], this.item.pos[1]];
 				this.anim = "fall";
-				this.item.pos = this.pos;
+				this.item.pos = [this.pos[0],this.pos[1]];
 			break;
 			case "fadeIn":
 				this.opacity = 0;
@@ -108,7 +112,7 @@ fzn.Animation.prototype = {
 				pos[1] = (h / 2) - (this.item.size[1] / 2);
 			}
 		}
-		return pos;
+		return [pos[0],pos[1]];
 	},
 	callback: function(self,anim){
 	
@@ -127,9 +131,9 @@ fzn.Animation.prototype = {
 				this.velDown = (this.velDown > this.maxVel) ? this.maxVel : this.velDown;
 				this.pos[1] += this.velDown;
 				this.pos[1] = (this.pos[1] > this.endPosition[1]) ? this.endPosition[1] : this.pos[1];
-				this.item.pos = this.pos
+				this.item.pos = [this.pos[0],this.pos[1]];
 			}else{
-				this.item.pos = this.endPosition;
+				this.item.pos = [this.endPosition[0],this.endPosition[1]];
 				this.onEnd();
 			}
 		},
@@ -138,14 +142,14 @@ fzn.Animation.prototype = {
 			this.pos[1] += this.velDown;
 			if(this.pos[1] > this.endPosition[1]){
 				this.pos[1] = this.endPosition[1]
-				this.item.pos = this.pos;
 				if(this.velDown < 1){
-					this.item.pos = this.endPosition;
+					this.item.pos = [this.endPosition[0],this.endPosition[1]];
 					this.onEnd();
 				}else{
 					this.velDown = -(this.velDown/2);
 				}
-			}	
+			}
+			this.item.pos = [this.pos[0],this.pos[1]];
 		},
 		jump: function(){
 			this.velDown += this.gravity;
@@ -153,7 +157,7 @@ fzn.Animation.prototype = {
 			if(this.pos[1] >= this.endPosition[1]){
 				this.velDown = 0-this.maxVel;
 			}
-			this.item.pos = this.pos;
+			this.item.pos = [this.pos[0],this.pos[1]];
 		},
 		fadeIn: function(){
 			this.opacity += 0.1;
@@ -186,7 +190,7 @@ fzn.Animation.prototype = {
 				this.pos[1] = this.endPosition[1];
 				rY = true;
 			}
-			this.item.pos = this.pos;
+			this.item.pos = [this.pos[0],this.pos[1]];
 			if(rX && rY){
 				this.onEnd();
 			}
@@ -207,7 +211,7 @@ fzn.Animation.prototype = {
 				this.size[1] = this.endSize[1];
 				rY = true;
 			}
-			this.item.size = this.size;
+			this.item.size = [this.size[0],this.size[1]];
 			if(rX && rY){
 				this.onEnd();
 			}

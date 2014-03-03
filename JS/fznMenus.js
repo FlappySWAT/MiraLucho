@@ -5,8 +5,9 @@ fzn.Menu = function (game,params){
 		this.game = game;
 		this.data = params.data || {};
 		this.size = params.size || [this.game.cnv.width,this.game.cnv.height];
-		this.parent = params.menu || game.level || false;
+		this.parent = params.menu || game || false;
 		this.pos = params.pos || [0,0];
+		this.realPos = [0,0];
 		this.value = params.value || 0;
 		this.menu = params.menu || false;
 		this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
@@ -44,13 +45,27 @@ fzn.Menu = function (game,params){
 }
 fzn.Menu.prototype = {
 	init: function(){
+		var parent = this.menu || this.parent || this.game,
+			parentSize = (typeof parent.size != "undefined") ? [parent.size[0],parent.size[1]] : [parent.cnv.width, parent.cnv.height],
+			centerX = (parentSize[0] / 2) - (this.size[0] / 2),
+			centerY = (parentSize[1] / 2) - (this.size[1] / 2);
 		if(this.pos == "center"){
 			this.pos = [];
-			this.pos[0] = (this.game.cnv.width / 2) - (this.size[0] / 2);
-			this.pos[1] = (this.game.cnv.height / 2) - (this.size[1] / 2);
+			this.pos[0] = centerX;
+			this.pos[1] = centerY;
 		}else{
-			this.pos[0] = (this.pos[0] == "center") ? (this.game.cnv.width / 2) - (this.size[0] / 2) : this.pos[0];
-			this.pos[1] = (this.pos[1] == "center") ? (this.game.cnv.height / 2) - (this.size[1] / 2) : this.pos[1];
+			this.pos[0] = (this.pos[0] == "center") ? centerX : this.pos[0];
+			this.pos[1] = (this.pos[1] == "center") ? centerX : this.pos[1];
+		}
+		centerX = (this.size[0] / 2);
+		centerY = (this.size[1] / 2);
+		if(this.textPos == "center"){
+			this.textPos = [];
+			this.textPos[0] = centerX;
+			this.textPos[1] = centerY;
+		}else{
+			this.textPos[0] = (this.textPos[0] == "center") ? centerX : this.textPos[0];
+			this.textPos[1] = (this.textPos[1] == "center") ? centerY : this.textPos[1];
 		}
 		this.anim = new fzn.Animation(this,this.animation);
 		// Generate a canvas for BG
@@ -143,8 +158,8 @@ fzn.Menu.prototype = {
 			this.game.canvas.textAlign = this.font.align;
 			for(i=0,len=texts.length;i<len;i++){
 				txt = texts[i];
-				posx = (this.menu) ? this.pos[0] + this.menu.pos[0] : this.pos[0];
-				posy = (this.menu) ? this.pos[1] + this.menu.pos[1] : this.pos[1];
+				posx = (this.menu) ? this.pos[0] + this.menu.realPos[0] : this.pos[0];
+				posy = (this.menu) ? this.pos[1] + this.menu.realPos[1] : this.pos[1];
 				this.game.canvas.fillText(txt,
 					this.textPos[0] + posx,
 					this.textPos[1] + (i * (parseInt(this.game.canvas.font) + 3)) + posy
@@ -179,16 +194,17 @@ fzn.Menu.prototype = {
 		}
 	},
 	redraw: function(){
-		var pos = this.pos,
-			x = (this.menu) ? pos[0] + this.menu.pos[0] : pos[0],
-			y = (this.menu) ? pos[1] + this.menu.pos[1] : pos[1];
+		var pos = [this.pos[0],this.pos[1]],
+			x,y;
+		this.realPos[0] = (this.menu) ? pos[0] + this.menu.pos[0] : pos[0];
+		this.realPos[1] = (this.menu) ? pos[1] + this.menu.pos[1] : pos[1];
 		this.game.canvas.save();
 		this.game.canvas.globalAlpha = (this.menu) ?  this.menu.opacity * this.opacity : this.opacity;
 		if(this.color != "transparent"){
 			this.game.canvas.fillStyle = this.color;
 			this.game.canvas.fillRect(
-				x,
-				y,
+				this.realPos[0],
+				this.realPos[1],
 				this.size[0],
 				this.size[1]
 			);
@@ -201,8 +217,8 @@ fzn.Menu.prototype = {
 				var ptrn = this.game.canvas.createPattern(this.game.images[this.source],this.repeat);
 				this.game.canvas.fillStyle = ptrn;
 				this.game.canvas.fillRect(
-					x,
-					y,
+					this.realPos[0],
+					this.realPos[1],
 					this.game.cnv.width,
 					this.game.cnv.height
 				);
@@ -213,31 +229,12 @@ fzn.Menu.prototype = {
 					state[1],
 					this.size[0],
 					this.size[1],
-					x,
-					y,
+					this.realPos[0],
+					this.realPos[1],
 					this.size[0],
 					this.size[1]
 				);
 			}
-		}
-		if(this.text){
-			this.game.canvas.fillStyle = this.font.color;
-			this.game.canvas.font = this.font.size + " '" + this.font.family + "', sans-serif";
-			y += (parseInt(this.font.size)/2)+(this.size[1]/2);
-			switch(this.font.align){
-				case "left":
-					x += 0;
-				break
-				case "right":
-					x += this.size[0];
-				break
-				case "center":
-					x += this.size[0]/2;
-				break
-			}
-			this.game.canvas.textAlign = this.font.align;
-			
-			this.game.canvas.fillText(this.text, x, y);
 		}
 		this.game.canvas.restore();
 	}
@@ -248,7 +245,7 @@ fzn.Button = function (menu,params){
 	this.game = menu.game;
 	this.data = params.data || {};
 	this.size = params.size || [50,20];
-	this.parent = params.menu || game.level || false;
+	this.parent = params.menu || game || false;
 	this.pos = params.pos || [0,0];
 	this.action = params.action || function(){}; 
 	this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
@@ -271,16 +268,17 @@ fzn.Button = function (menu,params){
 }
 fzn.Button.prototype = {
 	init: function(){
-		var w,h;
+		var parent = this.menu || this.parent || this.game,
+			parentSize = (typeof parent.size != "undefined") ? [parent.size[0],parent.size[1]] : [parent.cnv.width, parent.cnv.height],
+			centerX = (parentSize[0] / 2) - (this.size[0] / 2),
+			centerY = (parentSize[1] / 2) - (this.size[1] / 2);
 		if(this.pos == "center"){
 			this.pos = [];
-			this.pos[0] = (this.game.cnv.width / 2) - (this.size[0] / 2);
-			this.pos[1] = (this.game.cnv.height / 2) - (this.size[1] / 2);
+			this.pos[0] = centerX;
+			this.pos[1] = centerY;
 		}else{
-			w = this.parent.size[0] || this.game.cnv.width;
-			h = this.parent.size[1] || this.game.cnv.height;
-			this.pos[0] = (this.pos[0] == "center") ? (w / 2) - (this.size[0] / 2) : this.pos[0];
-			this.pos[1] = (this.pos[1] == "center") ? (h / 2) - (this.size[1] / 2) : this.pos[1];
+			this.pos[0] = (this.pos[0] == "center") ? centerX : this.pos[0];
+			this.pos[1] = (this.pos[1] == "center") ? centerX : this.pos[1];
 		}
 		this.anim = new fzn.Animation(this,this.animation);
 		// Generate a canvas for BG
@@ -293,9 +291,9 @@ fzn.Button.prototype = {
 	},
 	redraw: function(){
 		var state = this.sprite[this.state] || [0,0],
-			pos = this.pos,
-			x = (this.menu) ? pos[0] + this.menu.pos[0] : pos[0],
-			y = (this.menu) ? pos[1] + this.menu.pos[1] : pos[1];
+			pos = [this.pos[0],this.pos[1]],
+			x = (this.menu) ? pos[0] + this.menu.realPos[0] : pos[0],
+			y = (this.menu) ? pos[1] + this.menu.realPos[1] : pos[1];
 		this.game.canvas.save();
 		this.game.canvas.globalAlpha = (this.menu) ?  this.menu.opacity * this.opacity : this.opacity;
 		if(this.color != "transparent"){

@@ -265,14 +265,15 @@ fzn.Game.prototype = {
 					this.levelMeter.limit = Math.round(this.levelMeter.limit * this.increment);
 					this.speed = Math.round(this.speed / this.increment);
 					this.level++;
+					this.windowVariation = this.level+1;
 				}
 		}
 		
 	},
 	updateScore: function(){
 		this.canvas.textAlign = "right";
-		this.canvas.fillText("Score:", 80, 10);
-		this.canvas.fillText("Level:", 80, 20);
+		this.canvas.fillText(gameLang[this.lang].game.status.score, 80, 10);
+		this.canvas.fillText(gameLang[this.lang].game.status.level, 80, 20);
 		this.canvas.textAlign = "left";
 		this.canvas.fillText(this.score, 85, 10);
 		this.canvas.fillText(this.level, 85, 20);
@@ -280,7 +281,7 @@ fzn.Game.prototype = {
 	onGameOver: function(){
 		this.gameOver = true;
 		this.add("menu","BSOD","BSOD");
-		this.menus.BSOD.vatiableText=["* Your current score is: " + game.score + " points","* The level reached is: " + game.level];
+		this.menus.BSOD.vatiableText=[gameLang[this.lang].menus.BSoD.message[7] + game.score + gameLang[this.lang].menus.BSoD.message[8],gameLang[this.lang].menus.BSoD.message[9] + game.level];
 	},
 	reset:function(){
 		this.level = 0;
@@ -344,7 +345,6 @@ fzn.Game.prototype = {
 	resize: function(){
 		this.cnv.width = document.body.clientWidth;
 		this.cnv.height = document.body.clientHeight;
-		console.log("resize")
 	}
 }
 fzn.Catalog = function(game,type){

@@ -36,32 +36,36 @@
 				overflow:hidden;
 			}
 		</style>
+		<script type="text/javascript" src="JS/Lang.js"></script>
 		<script type="text/javascript" src="JS/fznPlatform.js"></script>
 		<script type="text/javascript" src="JS/fznLoaders.js"></script>
 		<script type="text/javascript" src="JS/fznMenus.js"></script>
 		<script type="text/javascript" src="JS/fznBackgrounds.js"></script>
 		<script type="text/javascript" src="JS/fznAnimations.js"></script>
 		<script>
-			var game;
+			var game,gameLanguage = "EN";
 			function loadGame(){
 				game = new fzn.Game("board");
+				// Add language
+				game.lang = gameLanguage;
+				
+				// Backgrounds
 				game.define("background",[
-					{
-						name:"empty"
-					},
-					{name:"test01",source:"IMG/background.png"},
-					{name:"test02",source:"IMG/backgroundItems.png"},
-					{name:"test03",source:"IMG/background.jpg"},
-					{name:"test04",source:"IMG/enemies.png"},
-					{name:"test05",source:"IMG/dummieIntro.jpg"},
-					{name:"test06",source:"IMG/SNES - Super Mario All-Stars Super Mario Bros - Backgrounds.png"}
+					{name:"empty"},
+					{name:"loadingLest01",source:"IMG/background.png"},
+					{name:"loadingLest02",source:"IMG/backgroundItems.png"},
+					{name:"loadingLest03",source:"IMG/background.jpg"},
+					{name:"loadingLest04",source:"IMG/enemies.png"},
+					{name:"loadingLest05",source:"IMG/dummieIntro.jpg"},
+					{name:"loadingLest06",source:"IMG/SNES - Super Mario All-Stars Super Mario Bros - Backgrounds.png"}
 				]);
+				
+				// Overlays (like backgrounds but on the front)
 				game.define("overlay",[
-					{
-						name:"empty",
-						fixed: true
-					}
+					{name:"empty",fixed: true}
 				]);
+				
+				// Buttons
 				game.define("button",[
 					{
 						name: "btnClose",
@@ -97,18 +101,30 @@
 						}
 					}
 				]);
+				
+				// Game Windows
 				game.define("window",[
 					{
 						name: "commonWindow",
 						animation:"fadeIn",
 						value: 10,
 						size:[200,100],
-						color:"black",
+						color:"#999999",
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "10px",
+							align: "center"
+						},
+						textPos: ["center",50],
+						text:[
+							gameLang[game.lang].game.windows.common1.title
+						],
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: "Close"
+									text: gameLang[game.lang].game.windows.common1.button
 								}
 							}
 						]
@@ -116,13 +132,24 @@
 						name: "alterWindow",
 						animation:"fadeIn",
 						value: 20,
-						size:[200,100],
-						color:"red",
+						size:[250,100],
+						color:"#666666",
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "10px",
+							align: "center"
+						},
+						textPos: ["center",50],
+						text:[
+							gameLang[game.lang].game.windows.common2.title
+						],
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: "Close"
+									text: gameLang[game.lang].game.windows.common2.button,
+									pos: ["center", 60]
 								}
 							}
 						]
@@ -130,19 +157,32 @@
 						name: "alterWindow2",
 						animation:"fadeIn",
 						value: 30,
-						size:[200,100],
-						color:"blue",
+						size:[300,100],
+						color:"#333333",
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							size: "10px",
+							align: "center"
+						},
+						textPos: ["center",50],
+						text:[
+							gameLang[game.lang].game.windows.common3.title
+						],
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: "Close"
+									text: gameLang[game.lang].game.windows.common3.button,
+									pos: ["center", 60]
 								}
 							}
 						]
 					
 					}
 				]);
+				
+				// Menus
 				game.define("menu",[
 					{
 						name: "BSOD",
@@ -158,7 +198,7 @@
 										size: "9px"
 									},
 									pos:["center",(game.cnv.height/2)-80],
-									text: "Crashed",
+									text: gameLang[game.lang].menus.BSoD.title,
 									action: function(game,menu){
 										var mMenu;
 										game.reset();
@@ -179,7 +219,7 @@
 										color: "white",
 										size: "8px"
 									},
-									text: "Press this button to continue_",
+									text: gameLang[game.lang].menus.BSoD.button,
 									action: function(game,menu){
 										game.reset();
 										game.gameOver = false;
@@ -196,13 +236,13 @@
 							size: "8px"
 						},
 						text:[
-							"A problem has been detected and the game has been shut down",
-							"to prevent damage.",
-							"",
-							"If this is the first time you've seen this stop error screen,",
-							"restart your game. If this screen appears again, try beating",
-							"the following score:",
-							""
+							gameLang[game.lang].menus.BSoD.message[0],
+							gameLang[game.lang].menus.BSoD.message[1],
+							gameLang[game.lang].menus.BSoD.message[2],
+							gameLang[game.lang].menus.BSoD.message[3],
+							gameLang[game.lang].menus.BSoD.message[4],
+							gameLang[game.lang].menus.BSoD.message[5],
+							gameLang[game.lang].menus.BSoD.message[6]
 						]
 					},
 					{
@@ -213,7 +253,7 @@
 							{
 								copyOf: "btnClose",
 								params:{
-									text: "Start",
+									text: gameLang[game.lang].menus.main.start,
 									pos:[(game.cnv.width/2)-110,game.cnv.height-100],
 									action: function(game,menu){
 										game.reset();
@@ -227,7 +267,7 @@
 							{
 								copyOf: "btnClose",
 								params:{
-									text: "Settings",
+									text: gameLang[game.lang].menus.main.settings,
 									pos:[(game.cnv.width/2)+10,game.cnv.height-100],
 									action: function(game,menu){
 										game.add("menu","settingsMenu");
@@ -247,7 +287,7 @@
 							size: "10px"
 						},
 						text:[
-							"Skin"
+							gameLang[game.lang].menus.settings.skin.title
 						],
 						textPos: [20,30]
 					},
@@ -262,9 +302,32 @@
 							size: "10px"
 						},
 						text:[
-							"Language"
+							gameLang[game.lang].menus.settings.lang.title
 						],
-						textPos: [20,30]
+						textPos: [20,30],
+						buttons:[
+							{
+								copyOf: "btnClose",
+								params:{
+									pos:[120,10],
+									text: gameLang[game.lang].menus.settings.lang.EN,
+									action: function(game,menu){
+										game.lang = "EN";
+									}
+								}
+							},
+							{
+								copyOf: "btnClose",
+								params:{
+									pos:[240,10],
+									fixed: false,
+									text: gameLang[game.lang].menus.settings.lang.DEBUG,
+									action: function(game,menu){
+										game.lang = "DEBUG";
+									}
+								}
+							}
+						]
 					},
 					{
 						name: "settingsMenu",
@@ -274,11 +337,18 @@
 							{
 								copyOf: "btnClose",
 								params:{
-									text: "OK",
+									text: gameLang[game.lang].menus.settings.button,
 									pos:[game.cnv.width-110,game.cnv.height-40],
 									action: function(game,menu){
 										menu.anim.start("fallOut",false,function(){
 											game.remove("menu",menu.id);
+											if(game.lang != gameLanguage){
+												gameLanguage = game.lang;
+												game.reset();
+												game.pause();
+												game = null;
+												loadGame();
+											}
 										})
 									}
 								}
@@ -294,7 +364,7 @@
 							size: "16px"
 						},
 						text:[
-							"Settings"
+							gameLang[game.lang].menus.settings.title
 						],
 						textPos: [20,36]
 					}
