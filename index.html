@@ -60,6 +60,13 @@
 					{name:"loadingLest06",source:"IMG/SNES - Super Mario All-Stars Super Mario Bros - Backgrounds.png"}
 				]);
 				
+				// Music and sounds
+				game.define("sound",[
+					{name:"bgMusic",source:"SFX/Kalimba.mp3"},
+					{name:"pop",source:"SFX/pop01.mp3"},
+					{name:"pop2",source:"SFX/drop.mp3"}
+				]);
+				
 				// Overlays (like backgrounds but on the front)
 				game.define("overlay",[
 					{name:"empty",fixed: true}
@@ -82,6 +89,7 @@
 						},
 						size: [100,32],
 						pos: ["center", 60],
+						sound: "pop",
 						action: function(game,menu){
 							if(!this.dying){
 								this.dying = true;
@@ -120,6 +128,7 @@
 						text:[
 							gameLang[game.lang].game.windows.common1.title
 						],
+						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
@@ -144,6 +153,7 @@
 						text:[
 							gameLang[game.lang].game.windows.common2.title
 						],
+						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
@@ -169,6 +179,7 @@
 						text:[
 							gameLang[game.lang].game.windows.common3.title
 						],
+						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
@@ -256,8 +267,8 @@
 									text: gameLang[game.lang].menus.main.start,
 									pos:[(game.cnv.width/2)-110,game.cnv.height-100],
 									action: function(game,menu){
-										game.reset();
 										game.gameOver = false;
+										game.reset();
 										menu.anim.start("fadeOut",false,function(){
 											game.remove("menu",menu.id);
 										})
@@ -355,6 +366,7 @@
 											game.remove("menu",menu.id);
 											if(game.lang != gameLanguage){
 												gameLanguage = game.lang;
+												game.sounds.mainBGMusic.audio.pause();
 												game.reset();
 												game.pause();
 												game = null;
@@ -380,8 +392,15 @@
 						textPos: [20,36]
 					}
 				]);
+				game.onLoad = function(game){
+					var music;
+					game.add("menu","xMainMenu");
+					music = game.add("sound","bgMusic","mainBGMusic");
+					music.audio.play();
+					music.audio.volume = 0.1;
+					music.audio.loop=true;
+				}
 				game.load();
-				game.add("menu","xMainMenu");
 			}
 		</script>
 	</head>
