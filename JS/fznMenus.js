@@ -23,12 +23,13 @@ fzn.Menu = function (game,params){
 			sounds: params.sound || []
 		};
 		this.variableText = [];
-		this.font = {family:"Arial",color:"black",size:"6px",align:"left"};
+		this.font = {family:"Arial",color:"black",size:"6px",align:"left",stroke:false};
 		if(typeof params.font != "undefined"){
 			this.font.family = params.font.family || this.font.family;
 			this.font.color = params.font.color || this.font.color;
 			this.font.size = params.font.size || this.font.size;
 			this.font.align = params.font.align || this.font.align;
+			this.font.stroke = params.font.stroke || this.font.stroke;
 		}
 		this.textPos = params.textPos || [
 			(this.size[0] / 2) - 250,
@@ -163,10 +164,20 @@ fzn.Menu.prototype = {
 			this.game.canvas.fillStyle = this.font.color;
 			this.game.canvas.font = this.font.size + " '" + this.font.family + "', sans-serif";
 			this.game.canvas.textAlign = this.font.align;
+			if(this.font.stroke){
+			  this.game.canvas.lineWidth = 3;
+			  this.game.canvas.strokeStyle = this.stroke;
+			}
 			for(i=0,len=texts.length;i<len;i++){
 				txt = texts[i];
 				posx = (this.menu) ? this.pos[0] + this.menu.realPos[0] : this.pos[0];
 				posy = (this.menu) ? this.pos[1] + this.menu.realPos[1] : this.pos[1];
+				if(this.font.stroke){
+					this.game.canvas.strokeText(txt,
+						this.textPos[0] + posx,
+						this.textPos[1] + (i * (parseInt(this.game.canvas.font) + 3)) + posy
+					);
+				}
 				this.game.canvas.fillText(txt,
 					this.textPos[0] + posx,
 					this.textPos[1] + (i * (parseInt(this.game.canvas.font) + 3)) + posy
@@ -210,7 +221,7 @@ fzn.Menu.prototype = {
 	},
 	redraw: function(){
 		var pos = [this.pos[0],this.pos[1]],
-			x,y;
+			x,y,state;
 		this.realPos[0] = (this.menu) ? pos[0] + this.menu.pos[0] : pos[0];
 		this.realPos[1] = (this.menu) ? pos[1] + this.menu.pos[1] : pos[1];
 		this.game.canvas.save();
@@ -238,6 +249,7 @@ fzn.Menu.prototype = {
 					this.game.cnv.height
 				);
 			}else{
+				state = this.state || [0,0];
 				this.game.canvas.drawImage(
 					this.game.images[this.source],
 					state[0],
@@ -267,13 +279,14 @@ fzn.Button = function (menu,params){
 	this.source = params.source || false;
 	this.sound = params.sound || false;
 	this.color = params.color || "transparent";
-	this.font = {family:"Arial",color:"black",size:"6px",align:"center"};
 	this.sound = params.sound || [];
+	this.font = {family:"Arial",color:"black",size:"6px",align:"center",stroke:false};
 	if(typeof params.font != "undefined"){
 		this.font.family = params.font.family || this.font.family;
 		this.font.color = params.font.color || this.font.color;
 		this.font.size = params.font.size || this.font.size;
 		this.font.align = params.font.align || this.font.align;
+		this.font.stroke = params.font.stroke || this.font.stroke;
 	}
 	this.sprite = params.sprite || {stand:[0,0]};
 	this.state = "stand";
@@ -368,6 +381,12 @@ fzn.Button.prototype = {
 				break
 			}
 			this.game.canvas.textAlign = this.font.align;
+			
+			if(this.font.stroke){
+				this.game.canvas.lineWidth = 3;
+				this.game.canvas.strokeStyle = this.stroke;
+				this.game.canvas.strokeText(this.text,x,y);
+			}
 			
 			this.game.canvas.fillText(this.text, x, y);
 		}

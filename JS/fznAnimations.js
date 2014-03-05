@@ -160,7 +160,7 @@ fzn.Animation.prototype = {
 			this.item.pos = [this.pos[0],this.pos[1]];
 		},
 		fadeIn: function(){
-			this.opacity += 0.1;
+			this.opacity += 0.15;
 			if(this.opacity > this.endOpacity){
 				this.opacity = this.endOpacity;
 				this.onEnd();
@@ -168,7 +168,7 @@ fzn.Animation.prototype = {
 			this.item.opacity = this.opacity;
 		},
 		fadeOut: function(){
-			this.opacity -= 0.2;
+			this.opacity -= 0.3;
 			if(this.opacity < 0){
 				this.opacity = 0;
 				this.onEnd();
