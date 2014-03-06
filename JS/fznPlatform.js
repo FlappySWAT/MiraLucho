@@ -29,20 +29,8 @@ fzn.Game = function(canvasID){
 		align: "left",
 		size: "10px"
 	}
-	this.ram = { 
-		count: 0,
-		limit: 13,
-		height: 0,
-		size: 0,
-		padding: 50
-	};
-	this.levelMeter = { 
-		count: 0,
-		limit: 100,
-		width: 0,
-		size: 0,
-		padding: 10
-	};
+	this.ram = {};
+	this.levelMeter = {};
 	this.speed = 1;
 	this.loader = new fzn.Loader(this,{
 		color: "black",
@@ -117,6 +105,7 @@ fzn.Game.prototype = {
 		if((this.turn % this.speed) == 0 && !this.gameOver){
 			this.loadWindow("commonWindow");
 		}
+		this.draw("background");
 		this.draw("window");
 		this.draw("overlay");
 		if(!this.gameOver){
@@ -325,13 +314,18 @@ fzn.Game.prototype = {
 			limit: 100,
 			width: 0,
 			size: 0,
-			padding: 10
+			padding: 20
 		};
 		this.windows = [];
-		this.ram.height = 200;
-		this.add("overlay","empty","theRam",{pos:[10,game.cnv.height - game.ram.padding],color:"red",size:[30,1]});
+		this.ram.height = 154;
 		this.levelMeter.width = 150;
-		this.add("overlay","empty","theLevelMeter",{pos:[(game.cnv.width - game.levelMeter.width),game.levelMeter.padding],color:"red",size:[1,15]});
+		
+		this.add("overlay","levelBarBack","theLevelMeterBack",{pos:[(this.cnv.width - (this.levelMeter.width + this.levelMeter.padding + 12)),this.levelMeter.padding-18]});
+		this.add("overlay","ramBarBack","theRamBack",{pos:[(this.ram.padding/2)-5,this.cnv.height - (this.ram.padding+159)]});
+		
+		this.add("overlay","ramBar","theRam",{pos:[(this.ram.padding/2),this.cnv.height - this.ram.padding],size:[30,1]});
+		this.add("overlay","levelBar","theLevelMeter",{pos:[(this.cnv.width - (this.levelMeter.width + this.levelMeter.padding)),this.levelMeter.padding],size:[1,15]});
+		this.add("background","mainBack","wallpaper");
 		
 		//this.gameOver = false;
 	},

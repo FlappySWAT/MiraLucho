@@ -41,25 +41,26 @@ fzn.Background.prototype = {
 		this.redraw();
 	},
 	redraw: function(){
-		var x,y,sX,sY,
-			pos=this.pos;
-		this.game.canvas.save();
-		if(this.fixed === true){
-			x = pos[0];
-			y = pos[1];
-			sX = pos[0];
-			sY = pos[0];
-		}else if(this.fixed === false){
-			y = pos[1] - this.parent.pos[1];
-			x = pos[0] - this.parent.pos[0]; 
-			sX = this.parent.pos[0];
-			sY = this.parent.pos[1];
-		}else{
-			x = pos[0] - (this.parent.pos[0]*this.fixed); 
-			y = pos[1] - (this.parent.pos[1]*this.fixed);
-			sX = this.parent.pos[0]*this.fixed;
-			sY = this.parent.pos[1]*this.fixed;
+		var state = [0,0],
+			pos = [this.pos[0],this.pos[1]],
+			x = (this.menu) ? pos[0] + this.menu.realPos[0] : pos[0],
+			y = (this.menu) ? pos[1] + this.menu.realPos[1] : pos[1],
+			sX = this.size[0],
+			sY = this.size[1];
+		if(this.parent){
+			if(this.fixed === false){
+				y = pos[1] - this.parent.pos[1];
+				x = pos[0] - this.parent.pos[0]; 
+				sX = this.parent.pos[0];
+				sY = this.parent.pos[1];
+			}else{
+				x = pos[0] - (this.parent.pos[0]*this.fixed); 
+				y = pos[1] - (this.parent.pos[1]*this.fixed);
+				sX = this.parent.pos[0]*this.fixed;
+				sY = this.parent.pos[1]*this.fixed;
+			}
 		}
+		this.game.canvas.save();
 		this.game.canvas.globalAlpha = (this.menu) ?  this.menu.opacity * this.opacity : this.opacity;
 		if(this.color != "transparent"){
 			this.game.canvas.fillStyle = this.color;
@@ -73,25 +74,54 @@ fzn.Background.prototype = {
 		if(this.source){
 			if(this.repeat == "repeat" || this.repeat == "repeat-x" || this.repeat == "repeat-y"){
 				this.game.canvas.translate(x,y);
-				sY = (!this.fixed && (this.repeat == "repeat-x" || this.repeat == "repeat")) ? 0 : sY;
-				sX = (!this.fixed && (this.repeat == "repeat-y" || this.repeat == "repeat")) ? 0 : sX;
+				//sY = (!this.fixed && (this.repeat == "repeat-x" || this.repeat == "repeat")) ? 0 : sY;
+				//sX = (!this.fixed && (this.repeat == "repeat-y" || this.repeat == "repeat")) ? 0 : sX;
 				var ptrn = this.game.canvas.createPattern(this.game.images[this.source],this.repeat);
 				this.game.canvas.fillStyle = ptrn;
 				this.game.canvas.fillRect(
+					0,
+					0,
 					sX,
-					sY,
-					this.game.cnv.width,
-					this.game.cnv.height
+					sY
 				);
 			}else{
 				this.game.canvas.drawImage(
 					this.game.images[this.source],
+					state[0],
+					state[1],
+					this.size[0],
+					this.size[1],
 					x,
 					y,
 					this.size[0],
 					this.size[1]
 				);
 			}
+		}
+		if(this.text){
+			this.game.canvas.fillStyle = this.font.color;
+			this.game.canvas.font = this.font.size + " '" + this.font.family + "', sans-serif";
+			y += (parseInt(this.font.size)/2)+(this.size[1]/2);
+			switch(this.font.align){
+				case "left":
+					x += 0;
+				break
+				case "right":
+					x += this.size[0];
+				break
+				case "center":
+					x += this.size[0]/2;
+				break
+			}
+			this.game.canvas.textAlign = this.font.align;
+			
+			if(this.font.stroke){
+				this.game.canvas.lineWidth = 3;
+				this.game.canvas.strokeStyle = this.stroke;
+				this.game.canvas.strokeText(this.text,x,y);
+			}
+			
+			this.game.canvas.fillText(this.text, x, y);
 		}
 		this.game.canvas.restore();
 	}

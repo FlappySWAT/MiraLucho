@@ -51,18 +51,23 @@
 				
 				// Backgrounds
 				game.define("background",[
-					{name:"empty"}
+					{name:"empty"},
+					{name:"mainBack",source:"IMG/wallpaper.jpg",pos:"center",fixed:true,size:[1280,720]}
 				]);
 				
 				// Music and sounds
 				game.define("sound",[
-					{name:"bgMusic",source:"SFX/Kalimba.mp3"},
+					//{name:"bgMusic",source:"SFX/Kalimba.mp3"},
 					{name:"pop",source:"SFX/pop01.mp3"},
 					{name:"pop2",source:"SFX/drop.mp3"}
 				]);
 				
 				// Overlays (like backgrounds but on the front)
 				game.define("overlay",[
+					{name:"levelBar",source:"IMG/bar01.png",repeat:"repeat-x"},
+					{name:"levelBarBack",source:"IMG/levelMeterBack.png",size:[167,38]},
+					{name:"ramBar",source:"IMG/bar02.png",repeat:"repeat-y"},
+					{name:"ramBarBack",source:"IMG/ramMeterBack.png",size:[40,181]},
 					{name:"empty",fixed: true}
 				]);
 				
@@ -390,10 +395,10 @@
 				game.onLoad = function(game){
 					var music;
 					game.add("menu","xMainMenu");
-					music = game.add("sound","bgMusic","mainBGMusic");
-					music.audio.play();
-					music.audio.volume = 0.1;
-					music.audio.loop=true;
+					//music = game.add("sound","bgMusic","mainBGMusic");
+					//music.audio.play();
+					//music.audio.volume = 0.1;
+					//music.audio.loop=true;
 				}
 				game.load();
 			}
