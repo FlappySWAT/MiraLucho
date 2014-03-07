@@ -16,7 +16,7 @@ fzn.Game = function(canvasID){
 	this.audios = {};
 	this.libs = {};
 	this.windows = [];
-	this.windowVariation = 1;
+	this.windowVariation = 3;
 	this.turn = 0;
 	this.score = 0;
 	this.level = 0;
@@ -280,7 +280,7 @@ fzn.Game.prototype = {
 					this.levelMeter.limit = Math.round(this.levelMeter.limit * this.increment);
 					this.speed = Math.round(this.speed / this.increment);
 					this.level++;
-					this.windowVariation = this.level+1;
+					this.windowVariation = (this.level+1)*3;
 				}
 		}
 		
@@ -302,6 +302,7 @@ fzn.Game.prototype = {
 		this.level = 0;
 		this.score = 0;
 		this.speed = 75;
+		this.windowVariation = 3;
 		this.ram = { 
 			count: 0,
 			limit: 13,

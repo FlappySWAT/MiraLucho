@@ -12,6 +12,7 @@ fzn.Menu = function (game,params){
 		this.menu = params.menu || false;
 		this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
 		this.source = params.source || false;
+		this.sprite = params.sprite || false;
 		this.color = params.color || "transparent";
 		this.fixed = false;
 		this.items = {
@@ -221,7 +222,7 @@ fzn.Menu.prototype = {
 	},
 	redraw: function(){
 		var pos = [this.pos[0],this.pos[1]],
-			x,y,state;
+			x,y,sprite;
 		this.realPos[0] = (this.menu) ? pos[0] + this.menu.pos[0] : pos[0];
 		this.realPos[1] = (this.menu) ? pos[1] + this.menu.pos[1] : pos[1];
 		this.game.canvas.save();
@@ -249,11 +250,11 @@ fzn.Menu.prototype = {
 					this.game.cnv.height
 				);
 			}else{
-				state = this.state || [0,0];
+				sprite = this.sprite || [0,0];
 				this.game.canvas.drawImage(
 					this.game.images[this.source],
-					state[0],
-					state[1],
+					sprite[0],
+					sprite[1],
 					this.size[0],
 					this.size[1],
 					this.realPos[0],
