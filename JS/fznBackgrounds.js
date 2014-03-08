@@ -8,6 +8,7 @@ fzn.Background = function (game,params){
 		this.parent = params.menu || game.level || false;
 		this.size = params.size || [this.game.cnv.width,this.game.cnv.height];
 		this.pos = params.pos || [0,0];
+		this.sprite = params.sprite || [0,0];
 		this.color = params.color || "transparent";
 		this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
 		this.source = params.source || false;
@@ -41,24 +42,16 @@ fzn.Background.prototype = {
 		this.redraw();
 	},
 	redraw: function(){
-		var state = [0,0],
-			pos = [this.pos[0],this.pos[1]],
+		var pos = [this.pos[0],this.pos[1]],
 			x = (this.menu) ? pos[0] + this.menu.realPos[0] : pos[0],
 			y = (this.menu) ? pos[1] + this.menu.realPos[1] : pos[1],
 			sX = this.size[0],
 			sY = this.size[1];
-		if(this.parent){
-			if(this.fixed === false){
-				y = pos[1] - this.parent.pos[1];
-				x = pos[0] - this.parent.pos[0]; 
-				sX = this.parent.pos[0];
-				sY = this.parent.pos[1];
-			}else{
+		if(this.parent && typeof this.fixed == "number"){
 				x = pos[0] - (this.parent.pos[0]*this.fixed); 
 				y = pos[1] - (this.parent.pos[1]*this.fixed);
 				sX = this.parent.pos[0]*this.fixed;
 				sY = this.parent.pos[1]*this.fixed;
-			}
 		}
 		this.game.canvas.save();
 		this.game.canvas.globalAlpha = (this.menu) ?  this.menu.opacity * this.opacity : this.opacity;
@@ -87,8 +80,8 @@ fzn.Background.prototype = {
 			}else{
 				this.game.canvas.drawImage(
 					this.game.images[this.source],
-					state[0],
-					state[1],
+					this.sprite[0],
+					this.sprite[1],
 					this.size[0],
 					this.size[1],
 					x,

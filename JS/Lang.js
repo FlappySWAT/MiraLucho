@@ -42,17 +42,62 @@ var gameLang={
 				level: "Level:"
 			},
 			windows:{
-				common1:{
-					title: "This is a test",
-					button: "Close"
-				},
-				common2:{
-					title: "This is another test",
-					button: "Close"
-				},
-				common3:{
-					title: "This is the third test",
-					button: "Close"
+				buttons:{
+					close: "Close",
+					wrong: "Accept",
+					right: "Clear",
+					activate: "Activate",
+					disable: "Disable",
+					death: "Restart",
+					safe: "Cancel"
+				}, 
+				small:[
+					"Error!",
+					"Alert!",
+					"Ermahgerd!!",
+					"Hello!",
+					"pwned!!",
+					"Woot!",
+					"Hello World!",
+					"Hurry up!",
+					"Bang!",
+					"ORLY!?",
+					"Are you mad?"
+				],
+				med:[
+					"Please Close",
+					"It's Impossibru!!",
+					"Gamer...",
+					"What r u doing?",
+					"Gamer...",
+					"Stahp!",
+					"Too many alerts!",
+					"You've got mail!",
+					"What's going on?",
+					"Look at me!",
+					"Danger! Danger!",
+					"Nothing to do here!"
+				],
+				big:[
+					"Haters gonna hate",
+					"I have no idea what I'm doing!",
+					"FUUUUUUUUUUUUUUUU!!!!",
+					"I used to be a gamer like you",
+					"then I took an arrow in the knee",
+					"One does not simply close alerts",
+					"Ain't nobody got time for that!",
+					"Your argument is invalid",
+					"Keep calm and close alerts",
+					"It's over 9000!!!!!!!!"
+				],
+				special:{
+					spawn: "You have 3 more alerts",
+					clear: "Clear Temp files?",
+					slowmo: "Activate Anti-spam for 3 secs?",
+					speedup: "Disable security for 3 secs?",
+					megaFail: "Epic fail!!!!!",
+					megaWin: "Epic win!!!!!!",
+					bigMortal: "Updates installed!"
 				}
 			}
 		}

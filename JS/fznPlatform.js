@@ -179,11 +179,18 @@ fzn.Game.prototype = {
 	loadWindow: function(window,params){
 		var params = params || {},
 			window = this.libs.window.generate(this.libs.window.getRandom(this.windowVariation),false,params),
-			rPos = [];
+			rPos = [],
+			target,textArr,rndmText;
 		window.index = this.windows.length;
 		rPos[0] = Math.round((this.cnv.width - window.size[0]) * Math.random());
 		rPos[1] = Math.round((this.cnv.height - window.size[1]) * Math.random());
 		window.pos = rPos;
+		if(window.items.text.length == 0){
+			target = (window.name.indexOf("little") == 0) ? "small" : (window.name.indexOf("medium") == 0) ? "med" : (window.name.indexOf("mega") == 0) ? "big" : "Hello World!";
+			textArr = gameLang[game.lang].game.windows[target];
+			rndmText = Math.floor(textArr.length*Math.random());
+			window.items.text = [textArr[rndmText]];
+		}
 		this.windows.push(window);
 		this.ram.count++;
 		return window;
@@ -302,7 +309,7 @@ fzn.Game.prototype = {
 		this.level = 0;
 		this.score = 0;
 		this.speed = 75;
-		this.windowVariation = 3;
+		this.windowVariation = 1;
 		this.ram = { 
 			count: 0,
 			limit: 13,

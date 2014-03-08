@@ -8,6 +8,7 @@ fzn.Menu = function (game,params){
 		this.parent = params.menu || game || false;
 		this.pos = params.pos || [0,0];
 		this.realPos = [0,0];
+		this.name = params.name || false;
 		this.value = params.value || 0;
 		this.menu = params.menu || false;
 		this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
@@ -15,6 +16,7 @@ fzn.Menu = function (game,params){
 		this.sprite = params.sprite || false;
 		this.color = params.color || "transparent";
 		this.fixed = false;
+		this.onLoad = params.onLoad || function(){};
 		this.items = {
 			backgrounds: params.backgrounds || [],
 			buttons: params.buttons || [],
@@ -75,6 +77,7 @@ fzn.Menu.prototype = {
 		this.game.loadImage(this.source);
 		this.loadItems();
 		this.playSound();
+		this.onLoad();
 	},
 	go: function(){
 		this.anim.go();
@@ -274,7 +277,7 @@ fzn.Button = function (menu,params){
 	this.data = params.data || {};
 	this.size = params.size || [50,20];
 	this.parent = params.menu || game || false;
-	this.pos = params.pos || [0,0];
+	this.pos = [params.pos[0],params.pos[1]] || [0,0];
 	this.action = params.action || function(){}; 
 	this.opacity = (typeof params.opacity != "undefined") ? params.opacity : 1;
 	this.source = params.source || false;

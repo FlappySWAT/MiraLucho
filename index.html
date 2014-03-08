@@ -52,7 +52,10 @@
 				// Backgrounds
 				game.define("background",[
 					{name:"empty"},
-					{name:"mainBack",source:"IMG/wallpaper.jpg",pos:"center",fixed:true,size:[1280,720]}
+					{name:"mainBack",source:"IMG/wallpaper.jpg",pos:"center",fixed:true,size:[1280,720]},
+					{name:"icnError",source:"IMG/icons.png",pos:[8,28],size:[66,63]},
+					{name:"icnAlert",source:"IMG/icons.png",pos:[8,28],size:[69,63],sprite:[75,0]},
+					{name:"icnMortal",source:"IMG/icons.png",pos:[8,28],size:[66,63],sprite:[153,0]}
 				]);
 				
 				// Music and sounds
@@ -95,13 +98,193 @@
 								this.dying = true;
 								menu.anim.stop();
 								game.ram.count--;
+								game.ram.count = (game.ram.count < 0) ? 0 : game.ram.count;
 								game.score += menu.value;
 								menu.anim.start("fadeOut",false,function(){
 									game.removeWindow(menu);
 								});
 							}
 						}
-					},{
+					},
+					{
+						name: "btnWrong",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[202,0],
+							press:[202,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							align: "center",
+							stroke: "black",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						sound: "pop",
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.stop();
+								menu.anim.start("fadeOut",false,function(){
+									game.removeWindow(menu);
+									game.loadWindow("commonWindow");
+									game.loadWindow("commonWindow");
+									game.loadWindow("commonWindow");
+								});
+							}
+						}
+					},
+					{
+						name: "btnRight",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[303,0],
+							press:[303,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							align: "center",
+							stroke: "black",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						sound: "pop",
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.stop();
+								game.ram.count -= 3;
+								game.ram.count = (game.ram.count < 0) ? 0 : game.ram.count;
+								game.score += 55;
+								menu.anim.start("fadeOut",false,function(){
+									game.removeWindow(menu);
+								});
+							}
+						}
+					},
+					{
+						name: "btnActivate",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[101,0],
+							press:[101,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							align: "center",
+							stroke: "black",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						sound: "pop",
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.stop();
+								game.ram.count--;
+								game.ram.count = (game.ram.count < 0) ? 0 : game.ram.count;
+								game.score += 83;
+								game.speed = game.speed*2;
+								setTimeout(function(){game.speed = Math.round(game.speed/2)},3000)
+								menu.anim.start("fadeOut",false,function(){
+									game.removeWindow(menu);
+								});
+							}
+						}
+					},
+					{
+						name: "btnDisable",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[202,0],
+							press:[202,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							align: "center",
+							stroke: "black",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						sound: "pop",
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.stop();
+								game.ram.count--;
+								game.ram.count = (game.ram.count < 0) ? 0 : game.ram.count;
+								game.score += menu.value;
+								menu.anim.start("fadeOut",false,function(){
+									game.removeWindow(menu);
+								});
+							}
+						}
+					},
+					{
+						name: "btnDeath",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[0,0],
+							press:[0,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							align: "center",
+							stroke: "black",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						sound: "pop",
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.start("fadeOut",false,function(){
+									game.onGameOver();
+								});
+							}
+						}
+					},
+					{
+						name: "btnGray",
+						source:"IMG/button.png",
+						sprite:{
+							stand:[404,0],
+							press:[404,33]
+						},
+						font: {
+							family: "Gamegirl",
+							color: "white",
+							align: "center",
+							stroke: "black",
+							size: "10px"
+						},
+						size: [100,32],
+						pos: ["center", 60],
+						sound: "pop",
+						action: function(game,menu){
+							if(!this.dying){
+								this.dying = true;
+								menu.anim.stop();
+								game.ram.count--;
+								game.ram.count = (game.ram.count < 0) ? 0 : game.ram.count;
+								game.score += menu.value;
+								menu.anim.start("fadeOut",false,function(){
+									game.removeWindow(menu);
+								});
+							}
+						}
+					},
+					{
 						name: "empty",
 						size: [86,20],
 						pos: "center",
@@ -122,19 +305,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -149,19 +329,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -176,19 +353,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -203,19 +377,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -230,19 +401,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -257,19 +425,96 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							}
+						]
+					},
+					{
+						name: "little07",
+						animation:"fadeIn",
+						value: 10,
+						size:[200,100],
+						source:"IMG/windows.png",
+						sprite:[0,606],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "center"
+						},
+						textPos: ["center",47],
+						sound: "pop2",
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							}
+						]
+					},
+					{
+						name: "littleError",
+						animation:"fadeIn",
+						value: 2,
+						size:[200,100],
+						source:"IMG/windows.png",
+						sprite:[0,303],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "left"
+						},
+						textPos: [82,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnError"}
+						],
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close,
+									pos: [80,60]
+								}
+							}
+						]
+					},
+					{
+						name: "littleAlert",
+						animation:"fadeIn",
+						value: 30,
+						size:[200,100],
+						source:"IMG/windows.png",
+						sprite:[0,303],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "left"
+						},
+						textPos: [84,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnAlert"}
+						],
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close,
+									pos: [82,60]
 								}
 							}
 						]
@@ -284,19 +529,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -304,26 +546,32 @@
 					{
 						name: "medium02",
 						animation:"fadeIn",
-						value: 20,
+						value: 0,
 						size:[250,100],
 						source:"IMG/windows.png",
 						sprite:[201,101],
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						text:[gameLang[game.lang].game.windows.special.clear],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									pos:[130, 60],
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							},
+							{
+								copyOf: "btnRight",
+								params:{
+									pos:[20, 60],
+									text: gameLang[game.lang].game.windows.buttons.right
 								}
 							}
 						]
@@ -338,19 +586,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -365,19 +610,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -392,19 +634,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -419,19 +658,16 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
@@ -439,32 +675,94 @@
 					{
 						name: "medium07",
 						animation:"fadeIn",
-						value: 20,
+						value: 3,
 						size:[250,100],
 						source:"IMG/windows.png",
 						sprite:[201,606],
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						text:[gameLang[game.lang].game.windows.special.spawn],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									pos:[130, 60],
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							},
+							{
+								copyOf: "btnWrong",
+								params:{
+									pos:[20, 60],
+									text: gameLang[game.lang].game.windows.buttons.wrong
 								}
 							}
 						]
 					},
 					{
-						name: "powered01",
+						name: "mediumError",
+						animation:"fadeIn",
+						value: 3,
+						size:[250,100],
+						source:"IMG/windows.png",
+						sprite:[201,303],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "center"
+						},
+						textPos: [162,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnError"}
+						],
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close,
+									pos: [112,60]
+								}
+							}
+						]
+					},
+					{
+						name: "mediumAlert",
+						animation:"fadeIn",
+						value: 55,
+						size:[250,100],
+						source:"IMG/windows.png",
+						sprite:[201,303],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "center"
+						},
+						textPos: [162,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnAlert"}
+						],
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close,
+									pos: [112,60]
+								}
+							}
+						]
+					},
+					{
+						name: "mega01",
 						animation:"fadeIn",
 						value: 30,
 						size:[300,100],
@@ -473,52 +771,55 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
 					},
 					{
-						name: "powered02",
+						name: "mega02",
 						animation:"fadeIn",
-						value: 30,
+						value: 0,
 						size:[300,100],
 						source:"IMG/windows.png",
 						sprite:[452,101],
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						text:[gameLang[game.lang].game.windows.special.slowmo],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									pos:[130, 60],
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							},
+							{
+								copyOf: "btnActivate",
+								params:{
+									pos:[20, 60],
+									text: gameLang[game.lang].game.windows.buttons.activate
 								}
 							}
 						]
 					},
 					{
-						name: "powered03",
+						name: "mega03",
 						animation:"fadeIn",
 						value: 30,
 						size:[300,100],
@@ -527,25 +828,22 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
 					},
 					{
-						name: "powered04",
+						name: "mega04",
 						animation:"fadeIn",
 						value: 30,
 						size:[300,100],
@@ -554,25 +852,22 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
 					},
 					{
-						name: "powered05",
+						name: "mega05",
 						animation:"fadeIn",
 						value: 30,
 						size:[300,100],
@@ -581,25 +876,22 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
 								}
 							}
 						]
 					},
 					{
-						name: "powered06",
+						name: "mega06",
 						animation:"fadeIn",
 						value: 30,
 						size:[300,100],
@@ -608,25 +900,31 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						text:[gameLang[game.lang].game.windows.special.speedup],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									pos:[155, 60],
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							},
+							{
+								copyOf: "btnDisable",
+								params:{
+									pos:[45, 60],
+									text: gameLang[game.lang].game.windows.buttons.disable
 								}
 							}
 						]
 					},
 					{
-						name: "powered07",
+						name: "mega07",
 						animation:"fadeIn",
 						value: 30,
 						size:[300,100],
@@ -635,19 +933,110 @@
 						font: {
 							family: "Gamegirl",
 							color: "black",
-							size: "10px",
+							size: "9px",
 							align: "center"
 						},
-						textPos: ["center",50],
-						text:[
-							gameLang[game.lang].game.windows.common1.title
-						],
+						textPos: ["center",47],
 						sound: "pop2",
 						buttons: [
 							{
 								copyOf: "btnClose",
 								params:{
-									text: gameLang[game.lang].game.windows.common1.button
+									text: gameLang[game.lang].game.windows.buttons.close
+								}
+							}
+						]
+					},
+					{
+						name: "megaError",
+						animation:"fadeIn",
+						value: 5,
+						size:[300,100],
+						source:"IMG/windows.png",
+						sprite:[452,303],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "center"
+						},
+						text:[gameLang[game.lang].game.windows.special.megaFail],
+						textPos: [187,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnError",pos:[13,28]}
+						],
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close,
+									pos: [137,60]
+								}
+							}
+						]
+					},
+					{
+						name: "megaAlert",
+						animation:"fadeIn",
+						value: 80,
+						size:[300,100],
+						source:"IMG/windows.png",
+						sprite:[452,303],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "center"
+						},
+						text:[gameLang[game.lang].game.windows.special.megaWin],
+						textPos: [187,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnAlert"}
+						],
+						buttons: [
+							{
+								copyOf: "btnClose",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.close,
+									pos: [137,60]
+								}
+							}
+						]
+					},
+					{
+						name: "megaDeath",
+						animation:"fadeIn",
+						value: 150,
+						size:[300,100],
+						source:"IMG/windows.png",
+						sprite:[452,707],
+						font: {
+							family: "Gamegirl",
+							color: "black",
+							size: "9px",
+							align: "center"
+						},
+						text:[gameLang[game.lang].game.windows.special.bigMortal],
+						textPos: [187,47],
+						sound: "pop2",
+						backgrounds:[
+							{copyOf: "icnMortal"}
+						],
+						buttons: [
+							{
+								copyOf: "btnDeath",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.death,
+									pos: [195,60]
+								}
+							},
+							{
+								copyOf: "btnGray",
+								params:{
+									text: gameLang[game.lang].game.windows.buttons.safe,
+									pos: [85,60]
 								}
 							}
 						]
